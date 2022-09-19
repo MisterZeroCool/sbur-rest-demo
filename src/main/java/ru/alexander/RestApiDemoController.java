@@ -1,5 +1,7 @@
 package ru.alexander;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +22,10 @@ public class RestApiDemoController {
 
     public RestApiDemoController() {
         coffees.addAll(List.of(
-                new Coffee("Cafe Cereza"),
-                new Coffee("Cafe Ganador"),
-                new Coffee("Cafe Lareno")
+                new Coffee("Café Cereza"),
+                new Coffee("Café Ganador"),
+                new Coffee("Café Lareño"),
+                new Coffee("Café Três Pontas")
         ));
     }
 
@@ -41,26 +44,27 @@ public class RestApiDemoController {
     return Optional.empty();
     }
 
-
+    @PostMapping
     Coffee postCoffee(@RequestBody Coffee coffee) {
         coffees.add(coffee);
         return coffee;
     }
 
     @PutMapping("/{id}")
-    Coffee putCoffee(@PathVariable String id, @RequestBody Coffee coffee){
+    Coffee putCoffee(@PathVariable String id, @RequestBody Coffee coffee) {
         int coffeeIndex = -1;
-        for(Coffee c : coffees) {
-            if(c.getId().equals(id)) {
+        for (Coffee c: coffees) {
+            if (c.getId().equals(id)) {
                 coffeeIndex = coffees.indexOf(c);
                 coffees.set(coffeeIndex, coffee);
             }
         }
-        return (coffeeIndex == -1 ? postCoffee(coffee) : coffee);
+        return (coffeeIndex == -1) ? postCoffee(coffee) : coffee;
     }
 
-    @DeleteMapping("  /{id}")
-    void deleteCoffee(@PathVariable String id){
+
+    @DeleteMapping("/{id}")
+    void deleteCoffee(@PathVariable String id) {
         coffees.removeIf(c -> c.getId().equals(id));
     }
 }
